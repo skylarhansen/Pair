@@ -15,9 +15,16 @@ class EntityController {
     
     let fetchedResultsController: NSFetchedResultsController
     
+//    var entities: [Entity] {
+//        let request = NSFetchRequest(entityName: "Entity")
+//        let moc = Stack.sharedStack.managedObjectContext
+//        return (try? moc.executeFetchRequest(request)) as? [Entity] ?? []
+//    }
+    
     init() {
         let request = NSFetchRequest(entityName: "Entity")
-        
+//        let sortDescriptor = NSSortDescriptor(key: "", ascending: false)
+//        request.sortDescriptors = [sortDescriptor]
         self.fetchedResultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: Stack.sharedStack.managedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
         do {
             try fetchedResultsController.performFetch()

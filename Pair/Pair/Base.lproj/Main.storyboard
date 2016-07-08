@@ -17,6 +17,9 @@
                             <rect key="frame" x="0.0" y="136" width="600" height="44"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <state key="normal" title="Randomize"/>
+                            <connections>
+                                <action selector="randomizeButtonTapped:" destination="a5a-XX-beg" eventType="touchUpInside" id="5Od-Vg-jPD"/>
+                            </connections>
                         </button>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="entityCell" textLabel="jhg-B2-7fE" style="IBUITableViewCellStyleDefault" id="9K7-cp-kup">

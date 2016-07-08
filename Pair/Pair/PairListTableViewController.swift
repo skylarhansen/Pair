@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import CoreData
 
-class PairListTableViewController: UITableViewController {
+class PairListTableViewController: UITableViewController, NSFetchedResultsControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,19 +22,17 @@ class PairListTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return 0
+            return 2
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("entityCell", forIndexPath: indexPath)
-
-        
-
+        guard let entity = EntityController.sharedController.fetchedResultsController.objectAtIndexPath(indexPath) as? Entity else { return UITableViewCell() }
+        cell.textLabel?.text = entity.name
         return cell
     }
     
-    // MARK: - Action Button
+    // MARK: - Action Buttons
  
     @IBAction func addButtonTapped(sender: AnyObject) {
         let alertController = UIAlertController(title: "Add Person", message: "Add someone new to the list.", preferredStyle: .Alert)
@@ -50,5 +49,52 @@ class PairListTableViewController: UITableViewController {
         alertController.addAction(addAction)
         alertController.addAction(cancelAction)
         presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    @IBAction func randomizeButtonTapped(sender: AnyObject) {
+        
+        
+    }
+}
+
+extension PairListTableViewController {
+     // NSFetchedResultsControllerDelegate functions
+    
+    func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        tableView.beginUpdates()
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeSection sectionInfo: NSFetchedResultsSectionInfo, atIndex sectionIndex: Int, forChangeType type: NSFetchedResultsChangeType) {
+        switch type {
+        case .Insert:
+            tableView.insertSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Automatic)
+            
+        case .Delete:
+            tableView.deleteSections(NSIndexSet(index: sectionIndex), withRowAnimation: .Automatic)
+        default:
+            break
+        }
+    }
+    
+    func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
+        switch type {
+        case .Insert:
+            guard let newIndexPath = newIndexPath else { return }
+            tableView.insertRowsAtIndexPaths([newIndexPath], withRowAnimation: .Automatic)
+        case .Delete:
+            guard let indexPath = indexPath else { return }
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        case .Move:
+            guard let indexPath = indexPath,
+                newIndexPath = newIndexPath else { return }
+            tableView.moveRowAtIndexPath(indexPath, toIndexPath: newIndexPath)
+        case .Update:
+            guard let indexPath = indexPath else { return }
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        }
+    }
+    
+    func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        tableView.endUpdates()
     }
 }
